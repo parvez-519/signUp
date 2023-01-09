@@ -44,33 +44,45 @@ const updatePassword = async (req, res) => {
   try {
     const regex =
       /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
-
     const userData = JSON.parse(JSON.stringify(req.body));
+    // const b64auth = (req.headers.authorization || "").split(" ")[1] || "";
+    // const [email, password, changePassword] = Buffer.from(b64auth, "base64")
+    //   .toString()
+    //   .split(":");
 
-    const b64auth = (req.headers.authorization || "").split(" ")[1] || "";
-    const [email, password, newPassword] = Buffer.from(b64auth, "base64")
-      .toString()
-      .split(" ");
-
-      console.log("------",b64auth)
-    let currentUser = await prisma.user.findFirst({ where: { email: req.body.email } });
-    console.log("______--",currentUser)
+    let currentUser = await prisma.user.findFirst({
+      where: { email: userData.email },
+    });
+    console.log(currentUser);
     if (currentUser) {
-      if ( newPassword.match(regex)) {
-        if (await bcrypt.compare(password, currentUser.password)) {
-          const encryptedPwd = await bcrypt.hash(newPassword, 10);
+      console.log("00000000");
+      console.log("-----", currentUser.password);
+      console.log("-----", userData.currentPassword);
+      console.log(await bcrypt.hash(userData.currentPassword, 10)),
+      console.log(
+        await bcrypt.compare(userData.currentPassword, currentUser.password)
+      );
+      if (
+        await bcrypt.compare(userData.currentPassword,currentUser.password)
+      ) {
+        console.log("55555");
+
+        if (userData.changePassword.match(regex)) {
+          console.log("666666666");
+          const encryptedPwd = await bcrypt.hash(userData.changePassword, 10);
+          console.log(encryptedPwd);
           await prisma.user.update({
-            where: { email:email },
+            where: { email: userData.email },
             data: { password: encryptedPwd },
           });
+        } else {
+          res.status(400).json({
+            status: appConst.status.fail,
+            response: null,
+            message: "Password requirement not matched",
+          });
+          return;
         }
-      } else {
-        res.status(400).json({
-          status: appConst.status.fail,
-          response: null,
-          message: "Password requirement not matched",
-        });
-        return;
       }
     } else {
       res.status(400).json({
@@ -83,7 +95,7 @@ const updatePassword = async (req, res) => {
     res.status(201).json({
       status: appConst.status.success,
       response: null,
-      message: "User Creation Successfully",
+      message: " Password successfully changed",
     });
   } catch (error) {
     console.log(error);
