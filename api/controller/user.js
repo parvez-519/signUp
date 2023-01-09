@@ -19,7 +19,7 @@ const signup = async (req, res) => {
     } else {
       userData.password = await bcrypt.hash(userData.password, 10);
       userData.token = jwt.sign(
-        { name: userData.firstname + userData.lastname, date: new Date() },
+        { name: userData.username, date: new Date() },
         "mysterytoken"
       );
       console.log("--------->>>>>", userData);
@@ -45,34 +45,20 @@ const updatePassword = async (req, res) => {
     const regex =
       /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
     const userData = JSON.parse(JSON.stringify(req.body));
-    // const b64auth = (req.headers.authorization || "").split(" ")[1] || "";
-    // const [email, password, changePassword] = Buffer.from(b64auth, "base64")
-    //   .toString()
-    //   .split(":");
 
     let currentUser = await prisma.user.findFirst({
-      where: { email: userData.email },
+      where: { userName: userData.userName },
     });
     console.log(currentUser);
     if (currentUser) {
-      console.log("00000000");
-      console.log("-----", currentUser.password);
-      console.log("-----", userData.currentPassword);
-      console.log(await bcrypt.hash(userData.currentPassword, 10)),
-      console.log(
-        await bcrypt.compare(userData.currentPassword, currentUser.password)
-      );
       if (
         await bcrypt.compare(userData.currentPassword,currentUser.password)
       ) {
-        console.log("55555");
-
+       
         if (userData.changePassword.match(regex)) {
-          console.log("666666666");
           const encryptedPwd = await bcrypt.hash(userData.changePassword, 10);
-          console.log(encryptedPwd);
           await prisma.user.update({
-            where: { email: userData.email },
+            where: { userName: userData.userName },
             data: { password: encryptedPwd },
           });
         } else {
