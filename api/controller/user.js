@@ -14,7 +14,7 @@ const signup = async (req, res) => {
       res.status(400).json({
         status: appConst.status.fail,
         response: null,
-        message: "Password requirement not matched",
+        message: appConst.message.pwd_pattern,
       });
     } else {
       userData.password = await bcrypt.hash(userData.password, 10);
@@ -27,7 +27,7 @@ const signup = async (req, res) => {
       res.status(201).json({
         status: appConst.status.success,
         response: resp,
-        message: "SignUp Successfully",
+        message: appConst.message.signup_success,
       });
     }
   } catch (error) {
@@ -65,7 +65,7 @@ const updatePassword = async (req, res) => {
           res.status(400).json({
             status: appConst.status.fail,
             response: null,
-            message: "Password requirement not matched",
+            message: appConst.message.pwd_pattern,
           });
           return;
         }
@@ -74,14 +74,14 @@ const updatePassword = async (req, res) => {
       res.status(400).json({
         status: appConst.status.fail,
         response: null,
-        message: "User not found",
+        message: appConst.message.user_not_found,
       });
       return;
     }
     res.status(201).json({
       status: appConst.status.success,
       response: null,
-      message: " Password successfully changed",
+      message: appConst.message.pwd_successfully_changed,
     });
   } catch (error) {
     console.log(error);
