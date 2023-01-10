@@ -4,10 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "typeorm migration:generate ./migrations/migration -o -d db.js && typeorm migration:run -d db.js",
-    "dev": "nodemon server",
-    "build_dev": "npm run build && nodemon server",
-    "install_dev": "npm i --force && nodemon server"
+    "dev": "nodemon server"
   },
   "keywords": [],
   "author": "",
@@ -22,9 +19,7 @@
     "jsonwebtoken": "^9.0.0",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.20",
-    "prismjs": "^1.29.0",
-    "sequelize": "^6.28.0",
-    "typeorm": "^0.3.11"
+    "prismjs": "^1.29.0"
   },
   "devDependencies": {
     "prisma": "^4.8.1"
