@@ -11,8 +11,7 @@ const appConst = {
         signup_success: 'SignUp Successfully',
         user_not_found:"User not found",
         pwd_successfully_changed:"Password successfully changed"
-    },
-    ROLE_ADMIN:'admin'
+    }
 }
 
 module.exports = appConst
