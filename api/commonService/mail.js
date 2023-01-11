@@ -13,7 +13,7 @@ var msg = {
   from_name: 'Parvez Pathan',
   to: 'parvez.pathan@TECTORO.COM',
   subject: 'Hello',
-  body_text: 'Hi , How are You'
+  body_text: 'Hi , This mail is regarding forgot password'
 };
  
 client.mailer.send(msg, function(err, result) {
